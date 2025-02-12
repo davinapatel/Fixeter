@@ -1,0 +1,15 @@
+package router
+
+import (
+	"github.com/davinapatel/Fixeter/controller"
+	"github.com/gofiber/fiber/v2"
+)
+
+// Setup routes
+func SetupRoutes(app *fiber.App) {
+	app.Get("/issue", controller.IssueList)
+	app.Get("/issue/:id", controller.IssueDetail)
+	app.Post("/issue", controller.IssueCreate)
+	app.Put("/issue/:id", controller.IssueUpdate)
+	app.Delete("/issue/:id", controller.IssueDelete)
+}
