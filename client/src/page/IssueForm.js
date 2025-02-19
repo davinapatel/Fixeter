@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Col, Container, Row, Spinner } from "react-bootstrap";
+import Map, { Marker, NavigationControl } from "react-map-gl/mapbox";
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -57,104 +59,101 @@ const Add = () => {
   return (
     <>
       <Container>
-        <h1>Log a New Issue</h1>
-        <form onSubmit={handleSubmit(saveForm)}>
-          <Row>
-            <Col xs="12" className="py-3">
-              <label>Category</label>
-              <input
-                defaultValue=""
-                className={`${errors.category && "error"}`}
-                placeholder="Please select a Category"
-                {...register("category", {
-                  required: { value: true, message: "Category is required." },
-                })}
-              />
-              {errors.category && (
-                <div className="error">{errors.category.message}</div>
-              )}
-            </Col>
-            <Col xs="12" className="py-3">
-              <label>Title of Issue</label>
-              <input
-                defaultValue=""
-                className={`${errors.title && "error"}`}
-                placeholder="Please enter a Title"
-                {...register("title", {
-                  required: {
-                    value: true,
-                    message: "Title is required.",
-                  },
-                })}
-              />
-              {errors.title && (
-                <div className="error">{errors.title.message}</div>
-              )}
-            </Col>
-            <Col xs="12" className="py-3">
-              <label>Date of Issue</label>
-              <input
-                defaultValue=""
-                type="datetime-local"
-                className={`${errors.date && "error"}`}
-                placeholder="Please enter a date"
-                {...register("date", {
-                  required: {
-                    value: true,
-                    message: "Date is required.",
-                  },
-                })}
-              />
-              {errors.date && (
-                <div className="error">{errors.date.message}</div>
-              )}
-            </Col>
-            <Col xs="12" className="py-3">
-              <label>Description</label>
-              <input
-                type="text"
-                defaultValue=""
-                className={`${errors.title && "error"}`}
-                placeholder="Please enter a Description"
-                {...register("description", {
-                  required: {
-                    value: true,
-                    message: "Description is required.",
-                  },
-                })}
-              />
-              {errors.description && (
-                <div className="error">{errors.description.message}</div>
-              )}
-            </Col>
-            {/* <Col xs="12" className="py-3">
-              <label>Image</label>
-              <input
-                type="text"
-                defaultValue=""
-                className={`${errors.image && "error"}`}
-                placeholder="Placeholder for an image upload button"
-                {...register("image", {
-                  required: {
-                    value: true,
-                  },
-                })}
-              />
-            </Col> */}
-            {/* <Col xs="12" className="py-3">
-              <label>Image</label>
-              <input
-                type="file"
-                className={`${errors.image && "error"}`}
-                placeholder="Please enter content"
-                {...register("image")}
-              />
-            </Col> */}
-            <Col>
-              <button type="submit">Submit Issue</button>
-            </Col>
-          </Row>
-        </form>
+        <div class="parent">
+          <div class="child">
+            <h1>Log a New Issue</h1>
+            <form onSubmit={handleSubmit(saveForm)}>
+              <Row>
+                <Col xs="12" className="py-3">
+                  <label>Category</label>
+                  <input
+                    defaultValue=""
+                    className={`${errors.category && "error"}`}
+                    placeholder="Please select a Category"
+                    {...register("category", {
+                      required: { value: true, message: "Category is required." },
+                    })}
+                  />
+                  {errors.category && (
+                    <div className="error">{errors.category.message}</div>
+                  )}
+                </Col>
+                <Col xs="12" className="py-3">
+                  <label>Title of Issue</label>
+                  <input
+                    defaultValue=""
+                    className={`${errors.title && "error"}`}
+                    placeholder="Please enter a Title"
+                    {...register("title", {
+                      required: {
+                        value: true,
+                        message: "Title is required.",
+                      },
+                    })}
+                  />
+                  {errors.title && (
+                    <div className="error">{errors.title.message}</div>
+                  )}
+                </Col>
+                <Col xs="12" className="py-3">
+                  <label>Date of Issue</label>
+                  <input
+                    defaultValue=""
+                    type="datetime-local"
+                    className={`${errors.date && "error"}`}
+                    placeholder="Please enter a date"
+                    {...register("date", {
+                      required: {
+                        value: true,
+                        message: "Date is required.",
+                      },
+                    })}
+                  />
+                  {errors.date && (
+                    <div className="error">{errors.date.message}</div>
+                  )}
+                </Col>
+                <Col xs="12" className="py-3">
+                  <label>Description</label>
+                  <input
+                    type="text"
+                    defaultValue=""
+                    className={`${errors.title && "error"}`}
+                    placeholder="Please enter a Description"
+                    {...register("description", {
+                      required: {
+                        value: true,
+                        message: "Description is required.",
+                      },
+                    })}
+                  />
+                  {errors.description && (
+                    <div className="error">{errors.description.message}</div>
+                  )}
+                </Col>
+                <Col>
+                  <button type="submit">Submit Issue</button>
+                </Col>
+              </Row>
+            </form>
+          </div>
+          <div class="child" style={{ width: "50vw", height: "50vh", marginTop: "20px" }}>
+            <Map
+              initialViewState={{
+                latitude: 50.7256138,
+                longitude: -3.5269209,
+                zoom: 10
+              }}
+              const url = {process.env.REACT_APP_MAP}
+              mapboxAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
+              mapStyle= "mapbox://styles/mapbox/streets-v11"
+              style={{ width: "100%", height: "100%" }}
+            >
+              <Marker latitude={50.7256138} longitude={-3.5269209} color="red" />
+              <NavigationControl position="bottom-right" />
+            </Map>
+        </div>
+       </div>
       </Container>
     </>
   );
