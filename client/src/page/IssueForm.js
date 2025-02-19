@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Col, Container, Row, Spinner } from "react-bootstrap";
-import Map, { Marker, NavigationControl } from "react-map-gl/mapbox";
+import { Col, Container, Nav, Row, Spinner } from "react-bootstrap";
+import Map, { Marker, NavigationControl, Room } from "react-map-gl/mapbox";
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 import { useForm } from "react-hook-form";
@@ -9,6 +9,19 @@ import { useNavigate } from "react-router-dom";
 
 const Add = () => {
   const [loading, setLoading] = useState(false);
+
+  const [marker, setMarker] = useState({
+    latitude: 50.7256138,
+    longitude: -3.5269209,
+  });
+  const handleMouseClick = (event) => {
+    console.log("Map click event:", event);
+    console.log(event.lngLat);
+    setMarker({
+      latitude: event.lngLat.lat,
+      longitude: event.lngLat.lng,
+    });
+  };
 
   const navigate = useNavigate();
 
@@ -20,11 +33,7 @@ const Add = () => {
 
   const saveForm = async (data) => {
     setLoading(true);
-    // console.log(data);
-
-    // data.file = data.image[0];
-    // data.image = null;
-
+    
     try {
       const apiUrl = process.env.REACT_APP_API_ROOT;
       const response = await axios.post(apiUrl + "/issue", data, {
@@ -142,15 +151,19 @@ const Add = () => {
               initialViewState={{
                 latitude: 50.7256138,
                 longitude: -3.5269209,
-                zoom: 10
+                zoom: 10,
               }}
-              const url = {process.env.REACT_APP_MAP}
               mapboxAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
               mapStyle= "mapbox://styles/mapbox/streets-v11"
               style={{ width: "100%", height: "100%" }}
+              onDblClick={handleMouseClick}
             >
-              <Marker latitude={50.7256138} longitude={-3.5269209} color="red" />
-              <NavigationControl position="bottom-right" />
+                <Marker
+                  latitude={marker.latitude}
+                  longitude={marker.longitude}
+                  color="red"
+                />
+                <NavigationControl position="bottom-right" />
             </Map>
         </div>
        </div>
