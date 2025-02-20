@@ -12,5 +12,8 @@ type Issue struct {
 	Title       string    `json:"title" gorm:"not null;column:title;size:255"`
 	Date        time.Time `json:"date" gorm:"not null;column:date;default:CURRENT_TIMESTAMP"`
 	Description string    `json:"description" gorm:"not null;column:description;type:text"`
+	Latitude    float64   `json:"latitude" gorm:"not null;column:latitude"`
+	Longitude   float64   `json:"longitude" gorm:"not null;column:longitude"`
+	Address     string    `json:"address" gorm:"not null;column:address;type:text"`
 	Image       string    `json:"image" gorm:"null;column:image;size:255"`
 }
