@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Col, Container, Nav, Row, Spinner } from "react-bootstrap";
+import { Col, Container, Row, Spinner, Button, Form} from "react-bootstrap";
 import Map, { Marker, NavigationControl, Room } from "react-map-gl/mapbox";
 import 'mapbox-gl/dist/mapbox-gl.css';
 
@@ -108,146 +108,152 @@ const Add = () => {
 
   return (
     <>
-      <Container>
+      {/* <Container > */}
+      <h1 style={{ textAlign: 'center'}}>Log a New Issue</h1>
         <div class="parent">
-          <div class="child">
-            <h1>Log a New Issue</h1>
-            <form onSubmit={handleSubmit(saveForm)}>
-              <Row>
-                <Col xs="12" className="py-3">
-                  <label>Category</label>
-                  <input
-                    defaultValue=""
-                    className={`${errors.category && "error"}`}
-                    placeholder="Please select a Category"
-                    {...register("category", {
-                      required: { value: true, message: "Category is required." },
-                    })}
-                  />
-                  {errors.category && (
-                    <div className="error">{errors.category.message}</div>
-                  )}
-                </Col>
-                <Col xs="12" className="py-3">
-                  <label>Title of Issue</label>
-                  <input
-                    defaultValue=""
-                    className={`${errors.title && "error"}`}
-                    placeholder="Please enter a Title"
-                    {...register("title", {
-                      required: {
-                        value: true,
-                        message: "Title is required.",
-                      },
-                    })}
-                  />
-                  {errors.title && (
-                    <div className="error">{errors.title.message}</div>
-                  )}
-                </Col>
-                <Col xs="12" className="py-3">
-                  <label>Date of Issue</label>
-                  <input
-                    defaultValue=""
-                    type="datetime-local"
-                    className={`${errors.date && "error"}`}
-                    placeholder="Please enter a date"
-                    {...register("date", {
-                      required: {
-                        value: true,
-                        message: "Date is required.",
-                      },
-                    })}
-                  />
-                  {errors.date && (
-                    <div className="error">{errors.date.message}</div>
-                  )}
-                </Col>
-                <Col xs="12" className="py-3">
-                  <label>Description</label>
-                  <input
-                    type="text"
-                    defaultValue=""
-                    className={`${errors.title && "error"}`}
-                    placeholder="Please enter a Description"
-                    {...register("description", {
-                      required: {
-                        value: true,
-                        message: "Description is required.",
-                      },
-                    })}
-                  />
-                  {errors.description && (
-                    <div className="error">{errors.description.message}</div>
-                  )}
-                </Col>
-                <Col xs="12" className="py-3">
-                  <label>Latitude</label>
-                  <input
-                    type="float64"
-                    defaultValue=""
-                    value={formData.latitude}
-                    className={`${errors.latitude && "error"}`}
-                    placeholder="Please select a location on Map"
-                    readOnly
-                    {...register("latitude", {
-                      required: {
-                        value: true,
-                        message: "Latitude is required via Map Selection.",
-                      },
-                    })}
-                  />
-                  {errors.latitude && (
-                    <div className="error">{errors.latitude.message}</div>
-                  )}
-                </Col>
-                <Col xs="12" className="py-3">
-                  <label>Longitude</label>
-                  <input
-                    type="float64"
-                    defaultValue=""
-                    value={formData.longitude}
-                    className={`${errors.longitude && "error"}`}
-                    placeholder="Please select a location on Map"
-                    readOnly
-                    {...register("longitude", {
-                      required: {
-                        value: true,
-                        message: "Longitude is required via Map Selection.",
-                      },
-                    })}
-                  />
-                  {errors.longitude && (
-                    <div className="error">{errors.longitude.message}</div>
-                  )}
-                </Col>
-                <Col xs="12" className="py-3">
-                  <label>Address</label>
-                  <input
-                    type="text"
-                    defaultValue=""
-                    value={address.address}
-                    className={`${errors.address && "error"}`}
-                    placeholder="Please select a location on Map"
-                    readOnly
-                    {...register("address", {
-                      required: {
-                        value: true,
-                        message: "Address is required via Map Selection.",
-                      },
-                    })}
-                  />
-                  {errors.address && (
-                    <div className="error">{errors.address.message}</div>
-                  )}
-                </Col>               
-                <Col>
-                  <button type="submit">Submit Issue</button>
-                </Col>
-              </Row>
-            </form>
+          <div class="child" style={{ width: "50vw", height: "50vh" }}>           
+            <Form onSubmit={handleSubmit(saveForm)}>
+                  <Form.Group as={Row} className="mb-3" controlId="formHorizontalCategory">
+                    <Form.Label column sm={3}>Category</Form.Label>
+                    <Col sm={9}>
+                      <Form.Select
+                        className={`${errors.category ? "error" : ""}`}
+                        {...register("category", {
+                          required: { value: true, message: "Category is required." },
+                        })}
+                        defaultValue=""
+                      >
+                        <option value="" disabled>Please select a Category</option>
+                        <option value="Potholes">Potholes</option>
+                        <option value="Graffiti">Graffiti</option>
+                        <option value="Anti-Social Behaviour">Anti-Social Behaviour</option>
+                        <option value="Broken Streetlights">Broken Streetlights</option>
+                      </Form.Select>
+                      {errors.category && (
+                        <div className="error text-danger">{errors.category.message}</div>
+                      )}
+                    </Col>
+                  </Form.Group>
+
+                  <Form.Group as={Row} className="mb-3" controlId="formHorizontalTitle">
+                    <Form.Label column sm={3}>Title of Issue</Form.Label>
+                    <Col sm={9}>
+                      <Form.Control
+                        type="text"
+                        className={`${errors.title && "error"}`}
+                        placeholder="Please enter a Title"
+                        {...register("title", {
+                          required: {
+                            value: true,
+                            message: "Title is required.",
+                          },
+                        })}
+                      />
+                      {errors.title && (<div className="error">{errors.title.message}</div>)}
+                    </Col>
+                  </Form.Group>
+
+                  <Form.Group as={Row} className="mb-3" controlId="formHorizontalDate">
+                    <Form.Label column sm={3}>Date of Issue</Form.Label>
+                    <Col sm={9}>
+                      <Form.Control
+                        type="datetime-local"
+                        className={`${errors.date && "error"}`}
+                        placeholder="Please enter a Title"
+                        {...register("date", {
+                          required: {
+                            value: true,
+                            message: "Date is required.",
+                          },
+                        })}
+                      />
+                      {errors.date && (<div className="error">{errors.date.message}</div>)}
+                    </Col>
+                  </Form.Group>
+
+                  <Form.Group as={Row} className="mb-3" controlId="formHorizontalDescription">
+                    <Form.Label column sm={3}>Description</Form.Label>
+                    <Col sm={9}>
+                      <Form.Control
+                        type="text"
+                        className={`${errors.description && "error"}`}
+                        placeholder="Please enter a Description"
+                        {...register("description", {
+                          required: {
+                            value: true,
+                            message: "Description is required.",
+                          },
+                        })}
+                      />
+                      {errors.description && (<div className="error">{errors.description.message}</div>)}
+                    </Col>
+                  </Form.Group>
+
+                  <Form.Group as={Row} className="mb-3" controlId="formHorizontalLatitude">
+                    <Form.Label column sm={3}>Latitude</Form.Label>
+                    <Col sm={9}>
+                      <Form.Control
+                        type="text"
+                        value={formData.latitude}
+                        readOnly
+                        className={`${errors.latitude && "error"}`}
+                        {...register("latitude", {
+                          required: {
+                            value: true,
+                            message: "Latitude is required via Map Selection.",
+                          },
+                        })}
+                      />
+                      {errors.latitude && (<div className="error">{errors.latitude.message}</div>)}
+                    </Col>
+                  </Form.Group>
+
+                  <Form.Group as={Row} className="mb-3" controlId="formHorizontalLongitude">
+                    <Form.Label column sm={3}>Longitude</Form.Label>
+                    <Col sm={9}>
+                      <Form.Control
+                        type="text"
+                        value={formData.longitude}
+                        readOnly
+                        className={`${errors.longitude && "error"}`}
+                        {...register("longitude", {
+                          required: {
+                            value: true,
+                            message: "Longitude is required via Map Selection.",
+                          },
+                        })}
+                      />
+                      {errors.longitude && (<div className="error">{errors.longitude.message}</div>)}
+                    </Col>
+                  </Form.Group>
+
+                  <Form.Group as={Row} className="mb-3" controlId="formHorizontalAddress">
+                    <Form.Label column sm={3}>Address</Form.Label>
+                    <Col sm={9}>
+                      <Form.Control
+                        type="text"
+                        value={address.address}
+                        readOnly
+                        className={`${errors.address && "error"}`}
+                        {...register("address", {
+                          required: {
+                            value: true,
+                            message: "Address is required via Map Selection.",
+                          },
+                        })}
+                      />
+                      {errors.address && (<div className="error">{errors.address.message}</div>)}
+                    </Col>
+                  </Form.Group>
+
+                {/* </Col>
+              </Row> */}
+              <Button type="submit">Submit Issue</Button>
+              {/* </Row> */}
+            </Form>
           </div>
-          <div class="child" style={{ width: "50vw", height: "50vh", marginTop: "20px" }}>
+
+          <div class="child" style={{ width: "50vw", height: "50vh", marginTop: "10px" }}>
             <Map
               initialViewState={{
                 latitude: 50.7256138,
@@ -268,7 +274,6 @@ const Add = () => {
             </Map>
         </div>
        </div>
-      </Container>
     </>
   );
 };
