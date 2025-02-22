@@ -75,8 +75,15 @@ const Add = () => {
 
   const saveForm = async (data) => {
     setLoading(true);
+    console.log(data);
+
+    data.file = data.image[0];
+    console.log(data.image)
+    data.image = null;
+
     try {
       const apiUrl = process.env.REACT_APP_API_ROOT;
+      console.log(data)
       const response = await axios.post(apiUrl + "/issue", data, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -246,10 +253,18 @@ const Add = () => {
                     </Col>
                   </Form.Group>
 
-                {/* </Col>
-              </Row> */}
+                  <Form.Group as={Row} className="mb-3" controlId="formHorizontalImage">
+                    <Form.Label column sm={3}>Image</Form.Label>
+                    <Col sm={9}>
+                      <Form.Control
+                        type="file"
+                        className={`${errors.image && "error"}`}
+                        {...register("image")}
+                      />
+                    </Col>
+                  </Form.Group>
+
               <Button type="submit">Submit Issue</Button>
-              {/* </Row> */}
             </Form>
           </div>
 
