@@ -2,6 +2,8 @@ package controller
 
 import (
 	"log"
+	"os"
+	"path/filepath"
 
 	"github.com/davinapatel/Fixeter/database"
 	"github.com/davinapatel/Fixeter/model"
@@ -70,6 +72,33 @@ func IssueCreate(c *fiber.Ctx) error {
 		context["statusText"] = "Bad Request"
 		context["message"] = "Parsing Request Failed."
 		c.Status(400)
+	}
+
+	//File upload
+	file, err := c.FormFile("file")
+
+	// Define the upload directory
+	uploadDir := "./static/uploads"
+
+	// Dynamically create the folder if it doesn't exist
+	if err := os.MkdirAll(uploadDir, os.ModePerm); err != nil {
+		log.Println("Error creating upload directory:", err)
+		return c.Status(500).SendString("Failed to create upload directory")
+	}
+
+	// Build the file path
+	filePath := filepath.Join(uploadDir, file.Filename)
+	if err != nil {
+		log.Println("Error in file upload.", err)
+	}
+
+	if file.Size > 0 {
+		if err := c.SaveFile(file, filePath); err != nil {
+			log.Println("Error in file uploading...", err)
+		}
+
+		//Set image path to the struct
+		record.Image = filePath
 	}
 
 	// Save data in the DB
