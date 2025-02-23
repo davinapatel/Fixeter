@@ -1,6 +1,7 @@
 import "./App.css";
 import Home from "./page/Home";
 import IssueForm from "./page/IssueForm";
+import PortalLanding from "./page/PortalLanding";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import { Routes, Route } from "react-router-dom";
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route path = "/" element ={<Home />} />
           <Route path = "/log-issue" element={<IssueForm />} />
+          <Route path="/portal" element={<PortalLanding />} />
         </Routes>
       </main>
     </div>

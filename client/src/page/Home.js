@@ -1,5 +1,5 @@
 import React from 'react'
-import {Container, Row,} from "react-bootstrap"
+import {Container, Row, Button} from "react-bootstrap"
 import { Link } from 'react-router-dom';
 
 const Home = () => {
@@ -9,7 +9,10 @@ const Home = () => {
         <Row>
           <h3>
             <Link to ="/log-issue">
-              <button className="btn">Log an Issue</button>
+              <Button className="btn">Log an Issue</Button>
+            </Link>
+            <Link to ="/portal">
+              <Button className="btn">Portal</Button>
             </Link>
           </h3>
         </Row>
