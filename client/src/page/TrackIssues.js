@@ -1,6 +1,6 @@
 import {React, useState, useEffect} from 'react';
 import axios from "axios";
-import {Container, Card, Spinner, Button} from "react-bootstrap";
+import {Container, Card, Spinner, Button, Dropdown, Alert} from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { format } from 'date-fns';
 
@@ -14,8 +14,9 @@ const formatDate = (dateString) => {
 
 const TrackIssues = () => {
 
-    const [apiData, setApiData] = useState(false);
+    const [apiData, setApiData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [filter, setFilter] = useState("All");
 
     
 
@@ -45,6 +46,19 @@ const TrackIssues = () => {
 
     console.log(apiData);
 
+    const filterChange = (status) => {
+        setFilter(status);
+    };
+
+    const filteredData = Array.isArray(apiData)
+        ? apiData.filter((record) => {
+            if (filter === "All") {
+                return true
+            }
+            return record.status === filter;
+      })
+    : [];
+
     if (loading) {
         return (
             <>
@@ -58,9 +72,32 @@ const TrackIssues = () => {
     return (
         <Container>
             <h3 className="mb-4"> Your Issues </h3>
+            <Dropdown>
+                <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                    Filter Issues
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                    <Dropdown.Item onClick={() => filterChange("Logged")}>Logged</Dropdown.Item>
+                    <Dropdown.Item onClick={() => filterChange("Resolved")}>Resolved</Dropdown.Item>
+                    <Dropdown.Item onClick={() => filterChange("Closed")}>Closed</Dropdown.Item>
+                    <Dropdown.Item onClick={() => filterChange("All")}>All</Dropdown.Item>
+                </Dropdown.Menu>
+            </Dropdown>
+
+            {filteredData.length === 0 ? (
+                <>
+                {[
+                    'info',
+                ].map((variant) => (
+                    <Alert className="mt-3" key={variant} variant={variant}>
+                        No items found for Status: {filter}
+                    </Alert>
+                ))}
+                </>
+            ) : (
             <div className="text-left">
-                {apiData && 
-                apiData.map((record, index) => (
+                {filteredData && 
+                filteredData.map((record, index) => (
                     <Card key={index} className="shadow-sm d-flex flex-row align-items-center" style={{ width: "60rem", borderRadius: "10px", overflow: "hidden" }}>
                         <Card.Img variant="left" src= {`http://localhost:8000/${record.image}`} className="img-fluid w-25 h-25"  style={{ width: "150px", height: "150px", objectFit: "cover" }} />
                         <Card.Body>
@@ -74,6 +111,7 @@ const TrackIssues = () => {
                     </Card>
                 ))}               
             </div>
+            )}
             <Link to ="/portal">
                 <Button className="position-fixed bottom-0 end-0 m-3" variant="primary">Back to Portal</Button>
             </Link>
