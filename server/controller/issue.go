@@ -78,7 +78,7 @@ func IssueCreate(c *fiber.Ctx) error {
 	file, err := c.FormFile("file")
 
 	// Define the upload directory
-	uploadDir := "./static/uploads"
+	uploadDir := "./static/uploads/"
 
 	// Dynamically create the folder if it doesn't exist
 	if err := os.MkdirAll(uploadDir, os.ModePerm); err != nil {

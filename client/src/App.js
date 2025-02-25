@@ -2,6 +2,7 @@ import "./App.css";
 import Home from "./page/Home";
 import IssueForm from "./page/IssueForm";
 import PortalLanding from "./page/PortalLanding";
+import TrackIssues from "./page/TrackIssues";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import { Routes, Route } from "react-router-dom";
@@ -17,6 +18,7 @@ function App() {
           <Route path = "/" element ={<Home />} />
           <Route path = "/log-issue" element={<IssueForm />} />
           <Route path="/portal" element={<PortalLanding />} />
+          <Route path="/track-issues" element={<TrackIssues />} />
         </Routes>
       </main>
     </div>
