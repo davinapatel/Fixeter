@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^13.2.1",
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
+    "date-fns": "^4.1.0",
     "mapbox-gl": "2.11.0",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.9",

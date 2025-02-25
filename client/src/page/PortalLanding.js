@@ -18,7 +18,9 @@ const PortalLanding = () => {
                             <Card.Text>
                                 View your past and current Issues logged.
                             </Card.Text>
-                            <Button className="pimary">Track</Button>
+                            <Link to="/track-issues">
+                                <Button className="pimary">Track</Button>
+                            </Link>
                         </Card.Body>
                     </Card>
                     <Card style={{ width: '18rem '}}>
