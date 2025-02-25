@@ -16,4 +16,5 @@ type Issue struct {
 	Longitude   float64   `json:"longitude" gorm:"not null;column:longitude"`
 	Address     string    `json:"address" gorm:"not null;column:address;type:text"`
 	Image       string    `json:"image" gorm:"null;column:image;size:255"`
+	Status      string    `json:"status" gorm:"not null;column:status;size:255"`
 }

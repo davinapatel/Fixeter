@@ -1,10 +1,11 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Col, Container, Row, Spinner, Button, Form} from "react-bootstrap";
-import Map, { Marker, NavigationControl, Room } from "react-map-gl/mapbox";
+import Map, { Marker, NavigationControl} from "react-map-gl/mapbox";
+import { Link } from "react-router-dom";
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 const Add = () => {
@@ -80,6 +81,7 @@ const Add = () => {
     data.file = data.image[0];
     console.log(data.image)
     data.image = null;
+    data = { ...data, status: "Logged" }
 
     try {
       const apiUrl = process.env.REACT_APP_API_ROOT;
@@ -88,12 +90,11 @@ const Add = () => {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-        body: JSON.stringify({ title: String(data.title) }),
       });
 
       if (response.status === 201) {
         console.log(response);
-        navigate("/");
+        navigate("/portal");
       }
 
       setLoading(false);
@@ -288,6 +289,9 @@ const Add = () => {
                 <NavigationControl position="bottom-right" />
             </Map>
         </div>
+        <Link to ="/portal">
+                <Button className="position-fixed bottom-0 end-0 m-3" variant="primary">Back to Portal</Button>
+        </Link>
        </div>
     </>
   );
