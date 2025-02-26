@@ -2,44 +2,41 @@ package controller
 
 import (
 	"log"
-	"os"
-	"path/filepath"
 
 	"github.com/davinapatel/Fixeter/database"
 	"github.com/davinapatel/Fixeter/model"
 	"github.com/gofiber/fiber/v2"
 )
 
-func IssueList(c *fiber.Ctx) error {
+func ResourceList(c *fiber.Ctx) error {
 
 	context := fiber.Map{
 		"statusText": "Ok",
-		"message":    "Issue List",
+		"message":    "Resource List",
 	}
 
 	db := database.DBConn
 
-	var records []model.Issue
+	var records []model.Resource
 
 	db.Find(&records)
 
-	context["issue_records"] = records
+	context["resource_records"] = records
 
 	c.Status(200)
 	return c.JSON(context)
-
 }
 
-func IssueDetail(c *fiber.Ctx) error {
+func ResourceDetail(c *fiber.Ctx) error {
 
 	context := fiber.Map{
 		"statusText": "Ok",
-		"message":    "Issue Detail",
+		"message":    "Resource Detail",
 	}
 
 	id := c.Params("id")
 
-	var record model.Issue
+	var record model.Resource
 
 	database.DBConn.First(&record, id)
 
@@ -57,82 +54,54 @@ func IssueDetail(c *fiber.Ctx) error {
 
 }
 
-func IssueCreate(c *fiber.Ctx) error {
+func ResourceCreate(c *fiber.Ctx) error {
 
 	context := fiber.Map{
 		"statusText": "Ok",
-		"message":    "Create an Issue",
+		"message":    "Create a Resource",
 	}
 
-	record := new(model.Issue)
+	record := new(model.Resource)
 
 	// Parses the body from the POST Request
 	if err := c.BodyParser(record); err != nil {
-		log.Println(err)
 		log.Println("Error in parsing request.")
 		context["statusText"] = "Bad Request"
 		context["message"] = "Parsing Request Failed."
 		c.Status(400)
 	}
 
-	//File upload
-	file, err := c.FormFile("file")
-
-	// Define the upload directory
-	uploadDir := "./static/uploads/"
-
-	// Dynamically create the folder if it doesn't exist
-	if err := os.MkdirAll(uploadDir, os.ModePerm); err != nil {
-		log.Println("Error creating upload directory:", err)
-		return c.Status(500).SendString("Failed to create upload directory")
-	}
-
-	// Build the file path
-	filePath := filepath.Join(uploadDir, file.Filename)
-	if err != nil {
-		log.Println("Error in file upload.", err)
-	}
-
-	if file.Size > 0 {
-		if err := c.SaveFile(file, filePath); err != nil {
-			log.Println("Error in file uploading...", err)
-		}
-
-		//Set image path to the struct
-		record.Image = filePath
-	}
-
 	// Save data in the DB
 	result := database.DBConn.Create(record)
 
 	if result.Error != nil {
-		log.Println("Error in saving data for N Issue.")
+		log.Println("Error in saving data for a Resource.")
 		context["statusText"] = "Bad Request"
-		context["message"] = "Saving New Issue Failed."
+		context["message"] = "Saving New Resource Failed."
 		c.Status(400)
 	}
 
-	context["statusText"] = "New Issue Record saved successfully."
+	context["statusText"] = "New Resource Record saved successfully."
 	context["data"] = record
 
 	c.Status(201)
 	return c.JSON(context)
 }
 
-func IssueUpdate(c *fiber.Ctx) error {
+func ResourceUpdate(c *fiber.Ctx) error {
 
 	context := fiber.Map{
 		"statusText": "Ok",
-		"message":    "Update Issue",
+		"message":    "Update Resource",
 	}
 
 	// http:localhost:8000/issue/2
 	id := c.Params("id")
 
-	var record model.Issue
+	var record model.Resource
 
 	// Finds the record in the DB that matches that given ID
-	// And populates into the Issue struct record
+	// And populates into the Resource struct record
 
 	database.DBConn.First(&record, id)
 
@@ -162,7 +131,7 @@ func IssueUpdate(c *fiber.Ctx) error {
 
 }
 
-func IssueDelete(c *fiber.Ctx) error {
+func ResourceDelete(c *fiber.Ctx) error {
 
 	c.Status(400)
 	context := fiber.Map{
@@ -172,7 +141,7 @@ func IssueDelete(c *fiber.Ctx) error {
 
 	id := c.Params("id")
 
-	var record model.Issue
+	var record model.Resource
 
 	database.DBConn.First(&record, id)
 
@@ -185,7 +154,7 @@ func IssueDelete(c *fiber.Ctx) error {
 	result := database.DBConn.Delete(record)
 
 	if result.Error != nil {
-		context["message"] = "Failure to delete Issue from Database."
+		context["message"] = "Failure to delete Resource from Database."
 		return c.JSON(context)
 
 	}

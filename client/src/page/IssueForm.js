@@ -82,6 +82,7 @@ const Add = () => {
     console.log(data.image)
     data.image = null;
     data = { ...data, status: "Logged" }
+    data = { ...data, resourceId: 1}
 
     try {
       const apiUrl = process.env.REACT_APP_API_ROOT;

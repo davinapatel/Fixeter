@@ -32,6 +32,7 @@ func ConnectDB() {
 	log.Println("Database Connection Successful.")
 
 	db.AutoMigrate(new(model.Issue))
+	db.AutoMigrate(new(model.Resource))
 
 	DBConn = db
 
