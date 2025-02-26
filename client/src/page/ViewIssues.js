@@ -1,24 +1,32 @@
-import {React, useState, useEffect} from 'react';
 import axios from "axios";
-import {Container, Card, Spinner, Button, Dropdown, Alert} from "react-bootstrap";
+import {React, useState, useEffect} from 'react'
+import { useParams} from 'react-router-dom';
+import {Container, Card, Spinner, Button, Alert} from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { format } from 'date-fns';
 
-const formatDate = (dateString) => {
-    // Convert the string to a Date object
-    const date = new Date(dateString);
+const ViewIssues = () => {
 
-    // Format the date (e.g., 4th January 2025, 12:04 PM)
-    return format(date, "do MMMM yyyy, h:mm a");
-};
-
-const TrackIssues = () => {
+    const formatDate = (dateString) => {
+        // Convert the string to a Date object
+        const date = new Date(dateString);
+    
+        // Format the date (e.g., 4th January 2025, 12:04 PM)
+        return format(date, "do MMMM yyyy, h:mm a");
+    };
 
     const [apiData, setApiData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [filter, setFilter] = useState("All");
+    const { status } = useParams();
 
-    
+
+    const statusMap = {
+        "logged": "Logged",
+        "progress": "In Progress",
+        "closed": "Closed"
+    };
+
+    const mappedStatus = statusMap[status] || "Unknown"
 
     useEffect(() => {
         const fetchData = async () => {
@@ -44,53 +52,32 @@ const TrackIssues = () => {
         return () => {};
     }, [])
 
-    console.log(apiData);
-
-    const filterChange = (status) => {
-        setFilter(status);
-    };
-
     const filteredData = Array.isArray(apiData)
         ? apiData.filter((record) => {
-            if (filter === "All") {
-                return true
-            }
-            return record.status === filter;
+            return record.status === mappedStatus;
       })
     : [];
 
     if (loading) {
-        return (
-            <>
-                <Container className="spinner">
-                    <Spinner animation="grow" />
-                </Container>
-            </>
-        );
-    }
+            return (
+                <>
+                    <Container className="spinner">
+                        <Spinner animation="grow" />
+                    </Container>
+                </>
+            );
+        }
+    
 
     return (
-        <Container>
-            <h3 className="mb-4"> Your Issues </h3>
-            <Dropdown>
-                <Dropdown.Toggle variant="primary" id="dropdown-basic">
-                    Filter Issues
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => filterChange("Logged")}>Logged</Dropdown.Item>
-                    <Dropdown.Item onClick={() => filterChange("In Progress")}>In Progress</Dropdown.Item>
-                    <Dropdown.Item onClick={() => filterChange("Closed")}>Closed</Dropdown.Item>
-                    <Dropdown.Item onClick={() => filterChange("All")}>All</Dropdown.Item>
-                </Dropdown.Menu>
-            </Dropdown>
-
-            {filteredData.length === 0 ? (
+      <Container className="py-2">
+        {filteredData.length === 0 ? (
                 <>
                 {[
                     'info',
                 ].map((variant) => (
                     <Alert className="mt-3" key={variant} variant={variant}>
-                        No items found for Status: {filter}
+                        No items found for Status: {mappedStatus}
                     </Alert>
                 ))}
                 </>
@@ -112,11 +99,11 @@ const TrackIssues = () => {
                 ))}               
             </div>
             )}
-            <Link to ="/portal">
+            <Link to ="/staff-portal">
                 <Button className="position-fixed bottom-0 end-0 m-3" variant="primary">Back to Portal</Button>
             </Link>
     </Container>
     );
 };
 
-export default TrackIssues;
+export default ViewIssues;
