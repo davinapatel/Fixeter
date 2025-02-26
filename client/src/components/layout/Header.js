@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Container, Row, Button } from "react-bootstrap";
+import {Button} from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 
@@ -13,10 +13,10 @@ const Header = () => {
               <Link to="/">Home</Link>
             </li>
             <li>
-              <Link to="/">About Us</Link>
+              <Link to="/staff-portal">Staff Portal</Link>
             </li>
             <li>
-              <Link to="/log-issue">Log Issue</Link>
+              <Link to="/portal">Resident Portal</Link>
             </li>
             <li>
               <Button href="#">Sign In</Button>

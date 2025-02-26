@@ -8,12 +8,7 @@ const Home = () => {
         <Container className="py-2">
         <Row>
           <h3>
-            <Link to ="/log-issue">
-              <Button className="btn">Log an Issue</Button>
-            </Link>
-            <Link to ="/portal">
-              <Button className="btn">Portal</Button>
-            </Link>
+            This will be the Home Page
           </h3>
         </Row>
       </Container>
