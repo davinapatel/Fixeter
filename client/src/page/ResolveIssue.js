@@ -2,7 +2,7 @@ import axios from "axios";
 import {React, useState, useEffect} from 'react';
 import {Container, Row, Spinner, Form, Image, Button} from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import {useParams, Link} from "react-router-dom";
+import {useParams, Link, useNavigate} from "react-router-dom";
 import { format } from 'date-fns';
 import Map, { Marker, NavigationControl} from "react-map-gl/mapbox";
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -15,29 +15,55 @@ const formatDate = (dateString) => {
     return format(date, "do MMMM yyyy, h:mm a");
 };
 
-const Home = () => {
+const ResolveIssue = () => {
     const {
         register,
         handleSubmit,
         formState: { errors },
       } = useForm();
 
-    const {recordId} = useParams();
+    const {status, recordId} = useParams();
     const [loading, setLoading] = useState(true);
     const [apiData, setApiData] = useState(null);
+    const [specificResource, setSpecificResource] = useState(null);
     const [resources, setResources] = useState(null);
+    const navigate = useNavigate();
+
+    const saveForm = async (data) => {
+        setLoading(true);
+        apiData.resourceId = Number(data.resource)
+        apiData.status = "In Progress"
+        
+        try {
+            const apiUrl = process.env.REACT_APP_API_ROOT;
+            const response = await axios.put(apiUrl + "/issue/" + recordId, apiData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },  
+            });
+             if (response.status === 200) {
+                console.log(response);
+                navigate("/staff-portal")
+             }
+             setLoading(false); 
+        } catch (error) {
+            setLoading(false);
+            console.log(error.response);
+        }
+    };
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const apiUrl = process.env.REACT_APP_API_ROOT;
-                const response = await axios.get(apiUrl + "/issue/" + recordId);
+              const apiUrl = process.env.REACT_APP_API_ROOT;
+              const response = await axios.get(apiUrl + "/issue/" + recordId);
 
-                if (response.status === 200) {
-                    if (response?.data.statusText === "Ok") {
-                        setApiData(response?.data?.record);
+              if (response.status === 200) {
+                   if (response?.data.statusText === "Ok") {
+                        setApiData(response?.data?.record)
                     }
-                }
+                };
+                
 
             } catch (error) {
                 console.log(error.response);
@@ -50,6 +76,27 @@ const Home = () => {
         fetchData();
     }, [recordId])
 
+    useEffect (() => {
+        const fetchSpecificResource = async () => {
+            try {
+                if (status === "progress" && apiData?.resourceId) {
+                    const apiUrl = process.env.REACT_APP_API_ROOT;
+                    const resourceResponse = await axios.get(apiUrl + "/resource/" + apiData.resourceId)
+                    setSpecificResource(resourceResponse?.data?.record)
+                    }
+                else {
+                    console.log("Not needed")
+                }
+            
+            } catch (error) {
+                console.log(error.response);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchSpecificResource();
+    }, [apiData, status])
+
     useEffect(() => {
         const fetchResources = async () => {
             try {
@@ -60,7 +107,6 @@ const Home = () => {
                     if (response2?.data?.statusText === "Ok") {
                         setResources(response2?.data?.resource_records);
                     }
-                    console.log(response2)
                 }
                 setLoading(false);
             } catch (error) {
@@ -73,7 +119,7 @@ const Home = () => {
         fetchResources();
     }, []);
 
-    if (loading) {
+    if (loading || !apiData || !resources || (status === "progress" && !specificResource)) {
         return (
             <>
                 <Container className="spinner">
@@ -96,7 +142,7 @@ const Home = () => {
           </h3>
           <div style={{ display: "flex", gap: "20px", alignItems: "flex-start", flexWrap: "wrap" }}>
             <div style={{ flex: 1, minWidth: "300px" }}>
-                <Form>
+                <Form onSubmit={handleSubmit(saveForm)}>
                     <Form.Group className="mb-3">
                         <Form.Label className="left-align">Category</Form.Label>
                         <Form.Select disabled>
@@ -121,29 +167,34 @@ const Home = () => {
                     </Form.Group>
                     <Form.Group className="mb-3">
                         <Form.Label className="left-align">Allocate Resource</Form.Label>
-                        <Form.Select className={`${errors.resource ? "error" : ""}`}
-                            {...register("resource", {
-                            required: { value: true, message: "Resource is required." },
-                            })}
-                            defaultValue=""
-                        >
-                            <option value="" disabled >Please select a resource</option>
-                            <option >{resources[1].type}</option>
-                            <option>{resources[2].type}</option>
-                            <option>{resources[3].type}</option>
-                            <option>{resources[4].type}</option>
-                        </Form.Select>
+                            {status === "logged" && (
+                            <Form.Select className={`${errors.resource && "error"}`}
+                                {...register("resource", {
+                                required: { value: true, message: "Resource is required." },
+                                })}
+                            >
+                                { resources?.map((resource, index) => (
+                                    <option key={resource.id} value={resource.id} disabled={index === 0}>
+                                        {resource.type}
+                                    </option>
+                                ))}
+                            </Form.Select>
+                            )}
+
+                            {status === "progress" && (
+                            <Form.Control placeholder={specificResource.type} disabled />
+                            )}
+                        
                         {errors.resource && (
                         <div className="error text-danger">{errors.resource.message}</div>
                       )}
                     </Form.Group>
+                
+                  <Button type="submit">Save</Button>
+                  <Link to="/staff-portal">
+                    <Button>Back to Staff Portal</Button>
+                  </Link>
                 </Form>
-                <div className="d-flex gap-2">
-                    <Button type="submit">Save</Button>
-                    <Link to="/staff-portal">
-                        <Button>Back to Staff Portal</Button>
-                    </Link>
-                </div>
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "10px", minWidth: "300px" }}>
@@ -177,4 +228,4 @@ const Home = () => {
     );
 };
 
-export default Home
+export default ResolveIssue;

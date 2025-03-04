@@ -94,7 +94,15 @@ const ViewIssues = () => {
                         </Card.Body>
                         <Link to={`/resolve-issue/${status}/${record.id}`}>
                             <div className="p-3">
-                                <Button variant="primary" className='text-center'>Resolve Issue</Button>
+                                {status === "logged" && (
+                                    <Button variant="primary" className='text-center'>Resolve Issue</Button>
+                                )}
+                                {status === "progress" && (
+                                    <Button variant="primary" className='text-center'>Update Issue</Button>
+                                )}
+                                {status === "closed" && (
+                                    <Button variant="primary" className='text-center'>View Issue</Button>
+                                )}
                             </div>
                         </Link>
                     </Card>
