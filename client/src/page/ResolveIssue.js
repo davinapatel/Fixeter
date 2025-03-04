@@ -29,6 +29,8 @@ const ResolveIssue = () => {
     const [specificResource, setSpecificResource] = useState(null);
     const [resources, setResources] = useState(null);
     const [checked, setChecked] = useState(false);
+  
+    
     const navigate = useNavigate();
 
     const saveForm = async (data) => {
@@ -69,6 +71,7 @@ const ResolveIssue = () => {
 
     useEffect(() => {
         const fetchData = async () => {
+            setLoading(true);
             try {
               const apiUrl = process.env.REACT_APP_API_ROOT;
               const response = await axios.get(apiUrl + "/issue/" + recordId);
@@ -94,7 +97,7 @@ const ResolveIssue = () => {
     useEffect (() => {
         const fetchSpecificResource = async () => {
             try {
-                if (status === "progress" && apiData?.resourceId) {
+                if ((status === "progress" || status === "closed") && apiData?.resourceId) {
                     const apiUrl = process.env.REACT_APP_API_ROOT;
                     const resourceResponse = await axios.get(apiUrl + "/resource/" + apiData.resourceId)
                     setSpecificResource(resourceResponse?.data?.record)
@@ -140,7 +143,7 @@ const ResolveIssue = () => {
         }
     }, [apiData, setValue]);
 
-    if (loading || !apiData || !resources || (status === "progress" && !specificResource)) {
+    if (loading || !apiData || !resources || ((status === "progress") && !specificResource) || ((status === "closed") && !specificResource)) {
         return (
             <>
                 <Container className="spinner">
@@ -160,9 +163,17 @@ const ResolveIssue = () => {
     return (
         <Container className="py-2">
         <Row>
-          <h3>
-            Resolve Issue
-          </h3>
+          
+          {status === "logged" && (
+            <h3>Resolve Issue</h3>
+          )}
+          {status === "progress" && (
+            <h3>Update Issue</h3>
+          )}
+          {status === "closed" && (
+            <h3>Closed Issue</h3>
+          )}
+          
           <div style={{ display: "flex", gap: "20px", alignItems: "flex-start", flexWrap: "wrap" }}>
             <div style={{ flex: 1, minWidth: "300px" }}>
                 <Form onSubmit={handleSubmit(saveForm)}>
@@ -204,7 +215,7 @@ const ResolveIssue = () => {
                             </Form.Select>
                             )}
 
-                            {status === "progress" && (
+                            {(status === "progress" || status === "closed") && (
                             <Form.Control placeholder={specificResource.type} disabled />
                             )}
                         
@@ -220,7 +231,6 @@ const ResolveIssue = () => {
                             <Form.Control 
                                 as="textarea"
                                 rows={3}
-                                // value= {apiData.comments}
                                 placeholder = "Please provide an update"
                                 {...register("comments", { required: "Comments are required." })}
                             />                        
@@ -236,8 +246,23 @@ const ResolveIssue = () => {
                             
                         
                       )}
+                    {status === "closed" && (
+                        <Form.Group className="mb-3">
+                            <Form.Label className="left-align">Department to Resolve</Form.Label>
+                            <Form.Control placeholder={specificResource.department} disabled />
+                            <Form.Label className="left-align, mt-3">Comments</Form.Label>
+                            <Form.Control 
+                                as="textarea"
+                                rows={3}
+                                placeholder = {apiData.comments}
+                                disabled
+                            />                        
+                        </Form.Group>
+                            
+                        
+                      )}
                 
-                  <Button type="submit">Save</Button>
+                  <Button type="submit" className="me-2">Save</Button>
                   <Link to="/staff-portal">
                     <Button>Back to Staff Portal</Button>
                   </Link>
