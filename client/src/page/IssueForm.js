@@ -79,6 +79,8 @@ const Add = () => {
     console.log(data);
 
     data.file = data.image[0];
+    data.latitude = marker.latitude;
+    data.longitude = marker.longitude;
     console.log(data.image)
     data.image = null;
     data = { ...data, status: "Logged" }
