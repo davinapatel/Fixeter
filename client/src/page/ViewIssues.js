@@ -92,9 +92,11 @@ const ViewIssues = () => {
                             <Card.Text className="text-muted">{record.description}</Card.Text>
                             <Card.Text className="text-secondary small">Issue Published: {formatDate(record.date)}</Card.Text>
                         </Card.Body>
-                        <div className="p-3">
-                            <Button variant="primary" className='text-center'>Status: {record.status ? record.status: "Unknown"}</Button>
-                        </div>
+                        <Link to={`/resolve-issue/${status}/${record.id}`}>
+                            <div className="p-3">
+                                <Button variant="primary" className='text-center'>Resolve Issue</Button>
+                            </div>
+                        </Link>
                     </Card>
                 ))}               
             </div>

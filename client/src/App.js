@@ -8,6 +8,7 @@ import StaffPortalLanding from "./page/StaffPortalLanding";
 import ManageIssue from "./page/ManageIssue";
 import ViewIssues from "./page/ViewIssues";
 import Analytics from "./page/Analytics";
+import ResolveIssue from "./page/ResolveIssue";
 import { Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -25,6 +26,7 @@ function App() {
           <Route path="/track-issues" element={<TrackIssues />} />
           <Route path="/manage-issue" element={<ManageIssue />} />
           <Route path="/issues/:status" element={<ViewIssues />} />
+          <Route path="/resolve-issue/:status/:recordId" element={<ResolveIssue />} />
           <Route path="/analytics" element={<Analytics />} />
         </Routes>
       </main>
