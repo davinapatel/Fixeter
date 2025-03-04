@@ -18,4 +18,6 @@ func SetupRoutes(app *fiber.App) {
 	app.Post("/resource", controller.ResourceCreate)
 	app.Put("/resource/:id", controller.ResourceUpdate)
 	app.Delete("/resource/:id", controller.ResourceDelete)
+
+	app.Get("/issuehistory", controller.IssueHistoryList)
 }

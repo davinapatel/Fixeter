@@ -33,6 +33,7 @@ func ConnectDB() {
 
 	db.AutoMigrate(new(model.Issue))
 	db.AutoMigrate(new(model.Resource))
+	db.AutoMigrate(new(model.IssueHistory))
 
 	DBConn = db
 

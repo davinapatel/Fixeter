@@ -112,6 +112,10 @@ func IssueCreate(c *fiber.Ctx) error {
 		c.Status(400)
 	}
 
+	//Update issue count
+	category := record.Category
+	IssueHistoryUpdate(category)
+
 	context["statusText"] = "New Issue Record saved successfully."
 	context["data"] = record
 
