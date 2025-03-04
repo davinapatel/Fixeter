@@ -18,6 +18,7 @@ type Issue struct {
 	Image       string    `json:"image" gorm:"null;column:image;size:255"`
 	Status      string    `json:"status" gorm:"not null;column:status;size:255"`
 	ResourceID  uint      `json:"resourceId" gorm:"not null;column:resourceId"`
+	Comments    string    `json:"comments" gorm:"column:comments"`
 
 	Resource Resource `gorm:"foreignKey:ResourceID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE;"`
 }
