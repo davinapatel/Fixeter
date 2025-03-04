@@ -19,6 +19,7 @@ const ResolveIssue = () => {
     const {
         register,
         handleSubmit,
+        setValue,
         formState: { errors },
       } = useForm();
 
@@ -27,13 +28,22 @@ const ResolveIssue = () => {
     const [apiData, setApiData] = useState(null);
     const [specificResource, setSpecificResource] = useState(null);
     const [resources, setResources] = useState(null);
+    const [checked, setChecked] = useState(false);
     const navigate = useNavigate();
 
     const saveForm = async (data) => {
         setLoading(true);
-        apiData.resourceId = Number(data.resource)
-        apiData.status = "In Progress"
-        
+        if (status === "logged"){
+            apiData.resourceId = Number(data.resource)
+            apiData.status = "In Progress"
+        };
+        if (status === "progress") {
+            apiData.comments = data.comments
+            if (checked === true) {
+                apiData.status = "Closed"
+            };
+        }
+               
         try {
             const apiUrl = process.env.REACT_APP_API_ROOT;
             const response = await axios.put(apiUrl + "/issue/" + recordId, apiData, {
@@ -51,6 +61,11 @@ const ResolveIssue = () => {
             console.log(error.response);
         }
     };
+
+    const handleCheckbox = (event) => {
+        setChecked(event.target.checked);
+
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -119,6 +134,12 @@ const ResolveIssue = () => {
         fetchResources();
     }, []);
 
+    useEffect(() => {
+        if (apiData?.comments) {
+            setValue("comments", apiData.comments); // Set default value when data loads
+        }
+    }, [apiData, setValue]);
+
     if (loading || !apiData || !resources || (status === "progress" && !specificResource)) {
         return (
             <>
@@ -131,6 +152,8 @@ const ResolveIssue = () => {
 
     const latitude = Number(apiData?.latitude);
     const longitude = Number(apiData?.longitude);
+
+    
 
     
 
@@ -189,6 +212,30 @@ const ResolveIssue = () => {
                         <div className="error text-danger">{errors.resource.message}</div>
                       )}
                     </Form.Group>
+                    {status === "progress" && (
+                        <Form.Group className="mb-3">
+                            <Form.Label className="left-align">Department to Resolve</Form.Label>
+                            <Form.Control placeholder={specificResource.department} disabled />
+                            <Form.Label className="left-align, mt-3">Comments</Form.Label>
+                            <Form.Control 
+                                as="textarea"
+                                rows={3}
+                                // value= {apiData.comments}
+                                placeholder = "Please provide an update"
+                                {...register("comments", { required: "Comments are required." })}
+                            />                        
+                            <Form.Check
+                                type="checkbox"
+                                label = "Close Issue"
+                                className="mt-3"
+                                checked = {checked}
+                                onChange={handleCheckbox}>
+
+                            </Form.Check>
+                        </Form.Group>
+                            
+                        
+                      )}
                 
                   <Button type="submit">Save</Button>
                   <Link to="/staff-portal">
