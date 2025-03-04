@@ -137,7 +137,7 @@ const Add = () => {
                         <option value="" disabled>Please select a Category</option>
                         <option value="Potholes">Potholes</option>
                         <option value="Graffiti">Graffiti</option>
-                        <option value="Anti-Social Behaviour">Anti-Social Behaviour</option>
+                        <option value="Bins">Bins</option>
                         <option value="Broken Streetlights">Broken Streetlights</option>
                       </Form.Select>
                       {errors.category && (
