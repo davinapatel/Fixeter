@@ -30,6 +30,26 @@ func IssueList(c *fiber.Ctx) error {
 
 }
 
+func IssueListStatus(c *fiber.Ctx) error {
+	context := fiber.Map{
+
+		"statusText": "Ok",
+		"message":    "Issue Status Detail",
+	}
+
+	var results []struct {
+		Status string
+		Count  int64
+	}
+
+	database.DBConn.Model(&model.Issue{}).Select("status, COUNT(*) as count").Group("status").Scan(&results)
+	log.Println(results)
+	context["issueStatus_records"] = results
+
+	c.Status(200)
+	return c.JSON(context)
+}
+
 func IssueDetail(c *fiber.Ctx) error {
 
 	context := fiber.Map{
@@ -111,6 +131,10 @@ func IssueCreate(c *fiber.Ctx) error {
 		context["message"] = "Saving New Issue Failed."
 		c.Status(400)
 	}
+
+	//Update issue count
+	category := record.Category
+	IssueHistoryUpdate(category)
 
 	context["statusText"] = "New Issue Record saved successfully."
 	context["data"] = record
