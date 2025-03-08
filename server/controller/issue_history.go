@@ -14,11 +14,14 @@ func IssueHistoryList(c *fiber.Ctx) error {
 		"message":    "IssueHistory List",
 	}
 
-	db := database.DBConn
-
 	var records []model.IssueHistory
 
-	db.Find(&records)
+	err := database.GetRecords(&records)
+	if err != nil {
+		log.Println("Failed to get IssueHistory Records")
+	} else {
+		log.Println("Successfully Retrieved IssueHistory Records")
+	}
 
 	context["issueHistory_records"] = records
 
@@ -30,7 +33,12 @@ func IssueHistoryUpdate(category string) {
 
 	var record model.IssueHistory
 
-	database.DBConn.First(&record, "category = ?", category)
+	err := database.GetRecordByCategory(&record, category)
+	if err != nil {
+		log.Println("Failed to get IssueHistory Record of Category", category)
+	} else {
+		log.Println("Successfully Retrieved IssueHistory Record of Category", category)
+	}
 
 	if record.ID == 0 {
 		log.Println("Record with a Category of", category, "not found.")
@@ -39,9 +47,11 @@ func IssueHistoryUpdate(category string) {
 	count := record.Count + 1
 	record.Count = count
 
-	result := database.DBConn.Save(record)
+	err = database.SaveRecord(&record)
 
-	if result.Error != nil {
+	if err != nil {
 		log.Println("Error in updating Issue Count for Category:", category)
+	} else {
+		log.Println("Successfully updated Issue Count for Category:", category)
 	}
 }

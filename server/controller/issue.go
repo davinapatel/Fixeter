@@ -12,16 +12,21 @@ import (
 
 func IssueList(c *fiber.Ctx) error {
 
+	// Setting initial JSON Response
 	context := fiber.Map{
 		"statusText": "Ok",
 		"message":    "Issue List",
 	}
 
-	db := database.DBConn
-
 	var records []model.Issue
 
-	db.Find(&records)
+	err := database.GetRecords(&records)
+
+	if err != nil {
+		log.Println("Failed to get Issue Records")
+	} else {
+		log.Println("Successfully Retrieved Issue Records")
+	}
 
 	context["issue_records"] = records
 
@@ -42,8 +47,12 @@ func IssueListStatus(c *fiber.Ctx) error {
 		Count  int64
 	}
 
-	database.DBConn.Model(&model.Issue{}).Select("status, COUNT(*) as count").Group("status").Scan(&results)
-	log.Println(results)
+	err := database.GetIssueStatusCount(&results)
+	if err != nil {
+		log.Println("Error in getting Issue List Status")
+	} else {
+		log.Println("Successfully Retrieve Issue List Status")
+	}
 	context["issueStatus_records"] = results
 
 	c.Status(200)
@@ -61,12 +70,18 @@ func IssueDetail(c *fiber.Ctx) error {
 
 	var record model.Issue
 
-	database.DBConn.First(&record, id)
+	err := database.GetRecordByID(&record, id)
+
+	if err != nil {
+		log.Println("Failed to get Issue Record of ID", id)
+	} else {
+		log.Println("Successfully Retrieved Issue Record of ID", id)
+	}
 
 	if record.ID == 0 {
-		log.Println("Record of ID", id, "not found.")
+		log.Println("Record of Issue ID", id, "not found.")
 		context["statusText"] = "Bad Request"
-		context["message"] = "Record of ID " + id + " not found."
+		context["message"] = "Record of Issue ID " + id + " not found."
 		c.Status(400)
 		return c.JSON(context)
 	}
@@ -123,16 +138,18 @@ func IssueCreate(c *fiber.Ctx) error {
 	}
 
 	// Save data in the DB
-	result := database.DBConn.Create(record)
+	err = database.SaveRecord(&record)
 
-	if result.Error != nil {
-		log.Println("Error in saving data for N Issue.")
+	if err != nil {
+		log.Println("Error in saving data for new Issue.")
 		context["statusText"] = "Bad Request"
 		context["message"] = "Saving New Issue Failed."
 		c.Status(400)
+	} else {
+		log.Println("Successfully saved new Issue")
 	}
 
-	//Update issue count
+	//Update issue history count
 	category := record.Category
 	IssueHistoryUpdate(category)
 
@@ -158,7 +175,14 @@ func IssueUpdate(c *fiber.Ctx) error {
 	// Finds the record in the DB that matches that given ID
 	// And populates into the Issue struct record
 
-	database.DBConn.First(&record, id)
+	//database.DBConn.First(&record, id)
+	err := database.GetRecordByID(&record, id)
+
+	if err != nil {
+		log.Println("Failed to get Issue Record of ID", id)
+	} else {
+		log.Println("Successfully Retrieved Issue Record of ID", id)
+	}
 
 	// If issue ID does not exist in DB
 	if record.ID == 0 {
@@ -173,10 +197,12 @@ func IssueUpdate(c *fiber.Ctx) error {
 		log.Println("Error in parsing request.")
 	}
 
-	result := database.DBConn.Save(record)
+	err = database.SaveRecord(&record)
 
-	if result.Error != nil {
-		log.Println("Error in saving data.")
+	if err != nil {
+		log.Println("Error in updating Issue of ID:", id)
+	} else {
+		log.Println("Successfully updated Issue of ID:", id)
 	}
 
 	context["message"] = "Record updated successfully"
@@ -198,7 +224,13 @@ func IssueDelete(c *fiber.Ctx) error {
 
 	var record model.Issue
 
-	database.DBConn.First(&record, id)
+	err := database.GetRecordByID(&record, id)
+
+	if err != nil {
+		log.Println("Failed to get Issue Record of ID", id)
+	} else {
+		log.Println("Successfully Retrieved Issue Record of ID", id)
+	}
 
 	if record.ID == 0 {
 		log.Println("Record of ID", id, "not found.")
@@ -206,12 +238,14 @@ func IssueDelete(c *fiber.Ctx) error {
 		return c.JSON(context)
 	}
 
-	result := database.DBConn.Delete(record)
+	err = database.DeleteRecord(&record)
 
-	if result.Error != nil {
+	if err != nil {
+		log.Println("Failed to delete Issue Record of ID:", id)
 		context["message"] = "Failure to delete Issue from Database."
 		return c.JSON(context)
-
+	} else {
+		log.Println("Successfully deleted Issue Record of ID:", id)
 	}
 
 	context["message"] = "Record deleted successfully."
