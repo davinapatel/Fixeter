@@ -14,7 +14,7 @@ const ManageIssue = () => {
             <div className="text-center">
                 <CardGroup className="w-50 mx-auto small">
                     <Card style={{ width: '18rem '}}>
-                        <Card.Img variant="top" src={manageIssueIcon} />
+                        <Card.Img variant="top" src={manageIssueIcon} alt="A clipboard with writing and a pencil next to it." />
                         <Card.Body>
                             <Card.Title>Logged Issues</Card.Title>
                             <Card.Text>
@@ -26,7 +26,7 @@ const ManageIssue = () => {
                         </Card.Body>
                     </Card>
                     <Card style={{ width: '18rem '}}>
-                        <Card.Img variant="top" src={inProgressIssueIcon} />
+                        <Card.Img variant="top" src={inProgressIssueIcon} alt="A clipboard with writing and a clock next to it." />
                         <Card.Body>
                             <Card.Title >In Progress Issues</Card.Title>
                             <Card.Text>
@@ -38,7 +38,7 @@ const ManageIssue = () => {
                         </Card.Body>
                     </Card>
                     <Card style={{ width: '18rem '}}>
-                        <Card.Img variant="top" src={closedIssueIcon} />
+                        <Card.Img variant="top" src={closedIssueIcon} alt="A clipboard with ticks on it."/>
                         <Card.Body>
                             <Card.Title >Closed Issues</Card.Title>
                             <Card.Text>

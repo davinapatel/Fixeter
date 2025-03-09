@@ -11,22 +11,26 @@ const Home = () => {
     {
       title: "Potholes",
       image: potholeImage,
-      text: "Potholes aren't just annoying, they can be dangerous too if not fixed.Report Potholes you spot as drive along roads or notice when walking"
+      text: "Potholes aren't just annoying, they can be dangerous too if not fixed.Report Potholes you spot as drive along roads or notice when walking",
+      altText: "An icon of a figure looking at a pothole."
     },
     {
       title: "Graffiti",
       image: graffitiImage,
-      text: "Graffiti on Public Buildings/Properties are not allowed unless permission has been granted by the owner. Report any Graffiti which you think shouldn't be there."
+      text: "Graffiti on Public Buildings/Properties are not allowed unless permission has been granted by the owner. Report any Graffiti which you think shouldn't be there.",
+      altText: "An icon of a spray can being sprayed onto a brick wall."
     },
     {
       title: "Bins",
       image: binsImage,
-      text: "No one likes overflowing bins. They smell, attract rodents and are unpleasant overall. Use our website to report bins which have not been emptied."
+      text: "No one likes overflowing bins. They smell, attract rodents and are unpleasant overall. Use our website to report bins which have not been emptied.",
+      altText: "An icon of a rubbish bin."
     },
     {
       title: "Broken Streetlights",
       image: streetlightImage,
-      text: "Report any broken/flashing streetlights to us and we guarantee we will get someone out there the same day to take a look."
+      text: "Report any broken/flashing streetlights to us and we guarantee we will get someone out there the same day to take a look.",
+      altText: "An icon of two streetlights on."
     }
   ]
 
@@ -61,7 +65,7 @@ const Home = () => {
               
             </Col>
             <Col sm={5}> 
-              <Image src={homeImage} fluid rounded />
+              <Image src={homeImage}  fluid rounded alt="An image of a man using his phone to pinpoint his location." />
             </Col>
           </Row>
           <Row>
@@ -80,6 +84,7 @@ const Home = () => {
                     <Card.Img 
                       variant="left"
                       src={card.image}
+                      alt={card.altText}
                       style={{ width: '300px', height: 'auto', objectFit: 'cover', marginRight: '10px' }} 
                       />
                     <Card.Body>

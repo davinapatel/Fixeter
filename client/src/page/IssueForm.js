@@ -8,7 +8,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
-const Add = () => {
+const IssueForm = () => {
   const [loading, setLoading] = useState(false);
 
   const [marker, setMarker] = useState({
@@ -300,4 +300,4 @@ const Add = () => {
   );
 };
 
-export default Add;
+export default IssueForm;

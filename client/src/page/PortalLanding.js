@@ -12,7 +12,7 @@ const PortalLanding = () => {
             <div className="text-center">
                 <CardGroup className="w-50 mx-auto small">
                     <Card style={{ width: '18rem '}}>
-                        <Card.Img variant="top" src={trackIssueIcon} />
+                        <Card.Img variant="top" src={trackIssueIcon} alt="A location marker attached to a paper." />
                         <Card.Body>
                             <Card.Title>Track your Issues</Card.Title>
                             <Card.Text>
@@ -24,7 +24,7 @@ const PortalLanding = () => {
                         </Card.Body>
                     </Card>
                     <Card style={{ width: '18rem '}}>
-                        <Card.Img variant="top" src={reportIssueIcon} />
+                        <Card.Img variant="top" src={reportIssueIcon} alt="A pen on a piece of paper as if it's writing."/>
                         <Card.Body>
                             <Card.Title >Report an Issue</Card.Title>
                             <Card.Text>

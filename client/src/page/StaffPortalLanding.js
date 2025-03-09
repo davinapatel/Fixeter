@@ -12,7 +12,7 @@ const StaffPortalLanding = () => {
             <div className="text-center">
                 <CardGroup className="w-50 mx-auto small">
                     <Card style={{ width: '18rem '}}>
-                        <Card.Img variant="top" src={manageIssueIcon} />
+                        <Card.Img variant="top" src={manageIssueIcon} alt="Clipboard with writing on it and pencil next to it." />
                         <Card.Body>
                             <Card.Title>Manage Issues</Card.Title>
                             <Card.Text>
@@ -24,7 +24,7 @@ const StaffPortalLanding = () => {
                         </Card.Body>
                     </Card>
                     <Card style={{ width: '18rem '}}>
-                        <Card.Img variant="top" src={analyticsIcon} />
+                        <Card.Img variant="top" src={analyticsIcon} alt="An icon of a graph." />
                         <Card.Body>
                             <Card.Title >Analytics</Card.Title>
                             <Card.Text>
