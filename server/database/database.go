@@ -38,3 +38,52 @@ func ConnectDB() {
 	DBConn = db
 
 }
+
+func GetRecords[T any](records *[]T) error {
+	if DBConn == nil {
+		log.Println("Database Connection is not initialized.")
+	}
+	return DBConn.Find(records).Error
+}
+
+func GetRecordByID[T any](record *T, id string) error {
+	if DBConn == nil {
+		log.Println("Database Connection is not initialized.")
+	}
+	return DBConn.Find(record, id).Error
+}
+
+func GetIssueStatusCount(results *[]struct {
+	Status string
+	Count  int64
+}) error {
+	if DBConn == nil {
+		log.Println("Database Connection is not initialized.")
+		return DBConn.Error
+	}
+	return DBConn.Model(&model.Issue{}).Select("status, COUNT(*) as count").Group("status").Scan(results).Error
+}
+
+func SaveRecord[T any](record *T) error {
+	if DBConn == nil {
+		log.Println("Database Connection is not initialized.")
+		return DBConn.Error
+	}
+	return DBConn.Save(record).Error
+}
+
+func GetRecordByCategory(record *model.IssueHistory, category string) error {
+	if DBConn == nil {
+		log.Println("Database Connection is not initialized.")
+		return DBConn.Error
+	}
+	return DBConn.First(record, "category = ?", category).Error
+}
+
+func DeleteRecord[T any](record *T) error {
+	if DBConn == nil {
+		log.Println("Database Connection is not initialized.")
+		return DBConn.Error
+	}
+	return DBConn.Delete(record).Error
+}

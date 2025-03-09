@@ -15,11 +15,14 @@ func ResourceList(c *fiber.Ctx) error {
 		"message":    "Resource List",
 	}
 
-	db := database.DBConn
-
 	var records []model.Resource
 
-	db.Find(&records)
+	err := database.GetRecords(&records)
+	if err != nil {
+		log.Println("Failed to get Resource Records")
+	} else {
+		log.Println("Successfully Retrieved Resource Records")
+	}
 
 	context["resource_records"] = records
 
@@ -38,12 +41,18 @@ func ResourceDetail(c *fiber.Ctx) error {
 
 	var record model.Resource
 
-	database.DBConn.First(&record, id)
+	err := database.GetRecordByID(&record, id)
+
+	if err != nil {
+		log.Println("Failed to get Resource Record of ID", id)
+	} else {
+		log.Println("Successfully Retrieved Resource Record of ID", id)
+	}
 
 	if record.ID == 0 {
 		log.Println("Record of ID", id, "not found.")
 		context["statusText"] = "Bad Request"
-		context["message"] = "Record of ID " + id + " not found."
+		context["message"] = "Record of Resource ID " + id + " not found."
 		c.Status(400)
 		return c.JSON(context)
 	}
@@ -72,9 +81,9 @@ func ResourceCreate(c *fiber.Ctx) error {
 	}
 
 	// Save data in the DB
-	result := database.DBConn.Create(record)
+	err := database.SaveRecord(&record)
 
-	if result.Error != nil {
+	if err != nil {
 		log.Println("Error in saving data for a Resource.")
 		context["statusText"] = "Bad Request"
 		context["message"] = "Saving New Resource Failed."
@@ -103,7 +112,13 @@ func ResourceUpdate(c *fiber.Ctx) error {
 	// Finds the record in the DB that matches that given ID
 	// And populates into the Resource struct record
 
-	database.DBConn.First(&record, id)
+	err := database.GetRecordByID(&record, id)
+
+	if err != nil {
+		log.Println("Failed to get Resource Record of ID", id)
+	} else {
+		log.Println("Successfully Retrieved Resource Record of ID", id)
+	}
 
 	// If issue ID does not exist in DB
 	if record.ID == 0 {
@@ -118,10 +133,12 @@ func ResourceUpdate(c *fiber.Ctx) error {
 		log.Println("Error in parsing request.")
 	}
 
-	result := database.DBConn.Save(record)
+	err = database.SaveRecord(&record)
 
-	if result.Error != nil {
-		log.Println("Error in saving data.")
+	if err != nil {
+		log.Println("Error in updating Resource of ID:", id)
+	} else {
+		log.Println("Successfully updated Resource of ID:", id)
 	}
 
 	context["message"] = "Record updated successfully"
@@ -135,28 +152,36 @@ func ResourceDelete(c *fiber.Ctx) error {
 
 	c.Status(400)
 	context := fiber.Map{
-		"statusText": "",
-		"message":    "",
+		"statusText": "Ok.",
+		"message":    "Delete Resource.",
 	}
 
 	id := c.Params("id")
 
 	var record model.Resource
 
-	database.DBConn.First(&record, id)
+	err := database.GetRecordByID(&record, id)
+
+	if err != nil {
+		log.Println("Failed to get Resource Record of ID", id)
+	} else {
+		log.Println("Successfully Retrieved Resource Record of ID", id)
+	}
 
 	if record.ID == 0 {
-		log.Println("Record of ID", id, "not found.")
-		context["message"] = "Record of ID " + id + " not found."
+		log.Println("Record of Resource ID", id, "not found.")
+		context["message"] = "Record of Resource ID " + id + " not found."
 		return c.JSON(context)
 	}
 
-	result := database.DBConn.Delete(record)
+	err = database.DeleteRecord(&record)
 
-	if result.Error != nil {
+	if err != nil {
+		log.Println("Failed to delete Issue Record of ID:", id)
 		context["message"] = "Failure to delete Resource from Database."
 		return c.JSON(context)
-
+	} else {
+		log.Println("Successfully deleted Issue Record of ID:", id)
 	}
 
 	context["message"] = "Record deleted successfully."

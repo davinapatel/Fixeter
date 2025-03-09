@@ -21,6 +21,7 @@ func init() {
 
 func main() {
 
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	sqlDB, err := database.DBConn.DB()
 
 	if err != nil {
