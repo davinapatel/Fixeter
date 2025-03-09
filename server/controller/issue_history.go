@@ -36,12 +36,14 @@ func IssueHistoryUpdate(category string) {
 	err := database.GetRecordByCategory(&record, category)
 	if err != nil {
 		log.Println("Failed to get IssueHistory Record of Category", category)
+		log.Println(err)
 	} else {
 		log.Println("Successfully Retrieved IssueHistory Record of Category", category)
 	}
 
 	if record.ID == 0 {
 		log.Println("Record with a Category of", category, "not found.")
+		log.Println(err)
 	}
 
 	count := record.Count + 1

@@ -152,8 +152,8 @@ func ResourceDelete(c *fiber.Ctx) error {
 
 	c.Status(400)
 	context := fiber.Map{
-		"statusText": "",
-		"message":    "",
+		"statusText": "Ok.",
+		"message":    "Delete Resource.",
 	}
 
 	id := c.Params("id")
