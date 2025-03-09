@@ -304,6 +304,7 @@ func TestResourceCreateSuccess(t *testing.T) {
 	assert.Equal(t, expectedRecord.Type, savedResource.Type)
 	assert.Equal(t, expectedRecord.Department, savedResource.Department)
 }
+
 func TestResourceUpdateSuccess(t *testing.T) {
 
 	// Setup test db
@@ -396,7 +397,7 @@ func TestResourceUpdateFail(t *testing.T) {
 
 	body, _ = io.ReadAll(response.Body)
 	var responseBody struct {
-		Data       model.Resource `json:"data"`
+		Data       model.Resource `json:"record"`
 		Message    string         `json:"message"`
 		StatusText string         `json:"statusText"`
 	}
@@ -404,8 +405,7 @@ func TestResourceUpdateFail(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, "Record of ID 999 not found.", responseBody.Message)
-	assert.Equal(t, "Ok.", responseBody.StatusText)
-	//assert.Equal(t, "TestType1", responseBody.Data.Type)
+	assert.Equal(t, "Bad Request", responseBody.StatusText)
 }
 
 func TestResourceDeleteSuccess(t *testing.T) {
