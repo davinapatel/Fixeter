@@ -5,7 +5,11 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// Setup routes
+// SetupRoutes configures all the API routes for the GoFiber Application
+// Each route is associated with a corresponding controller function which handles the request
+
+// Parameters:
+// - app: A pointer to the GoFiber Appplication instance where the routes are registered
 func SetupRoutes(app *fiber.App) {
 	app.Get("/issue", controller.IssueList)
 	app.Get("/issue/:id", controller.IssueDetail)
