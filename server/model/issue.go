@@ -1,3 +1,21 @@
+// The package model describes all the models/data structures that will be used in the application
+//
+// The Issue struct holds all the data related to a single Issue that has been logged. Most of these fields
+// the user will fill in via a form on a web page
+//
+// Fields:
+// - ID:          The Primary Key of the table, a unique identifier for each record that autoincrements
+// - Category:    The Category of Issue i.e Graffiti, Potholes
+// - Title:       Title of the Issue
+// - Date:        The date of the issue to be reported
+// - Description: A description of the logged issue
+// - Latitude:    The latitude coordinate of the location that the issue is located
+// - Longitude:   The longitude coordinate of the location that the issue is located
+// - Address:     The address of the location that the issue is located
+// - Image:       The path of the where the image uploaded with the issue is located
+// - Status:      Status of the issue i.e Logged, In Progress or Closed
+// - ResourceID:  The foreign key to the Resource table/struct (an Issue will have a resource allocated to it)
+// - Comments:    Comments added to Issue to update the progress
 package model
 
 import (
